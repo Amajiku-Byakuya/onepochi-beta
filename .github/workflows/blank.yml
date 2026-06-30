@@ -1,0 +1,21 @@
+on:
+  release:
+    types: released
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Discord message
+        run: |
+          NAME="${{ github.event.release.name }}"
+          URL="${{ github.event.release.html_url }}"
+
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"content\": \"🚀 新リリース\\n\\n$NAME\\n$URL\"
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
